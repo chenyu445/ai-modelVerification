@@ -1,0 +1,141 @@
+接口：
+
+除了登录外，所有接口带token
+所有的字段都是驼峰命名方式
+所有以time结尾的字段格式为
+2012-02-01 12:12:12
+
+密码需要经过一次sha256加密再传送到服务器
+
+1 登录接口
+  输入userName
+      passWord
+
+      {"userName":"XXX","passWord":"xxx"}
+  返回值 totalSpace freeSpace 用户权限组(?) 是否需要修改密码
+      {'msg': 'success', 'code': 1, 'data': {'token': 'XXXX','totalSpace':'xxx','freeSpace':'xxx','roleType':'xxxx','inuse':'xxx'}}
+      //会返回user除去密码外的所有信息
+
+
+
+1.2 修改密码
+  输入 原密码 新密码
+  {'oldPassword':'','newPassword':'','token':''}
+  返回值
+  {'msg': 'success', 'code': 1, 'data': ''}
+
+2 获取模型列表/模型搜索（模糊匹配）
+  输入 模型名称（modelName值为“”时返回所有模型，否则模糊搜索） pageSize pageIndex
+  {'token':'xxx','modelName':'xxx','pageSize':'xxx','pageIndex':'xxx'}
+
+
+  返回值：
+  {'msg': 'success', 'code': 1, 'data': {['modelId':'xx',' modelName':'xxx', 'modelVersion':'xxx','modelFilesNum':'xxxx','updateTime':'','allVersion':[]]....}}
+
+
+3  根据模型获取文件列表
+   输入 上传日期 文件名称（上传日期和文件名称可以为“”，同为“”时，返回所有，只要有一个有非“”值，则进行搜索） modelId pageSize pageIndex
+   {'token':'xx','uploadTimeStart':'2013-09-01','uploadTimeEnd':'2013-09-01','uploadFileName':'xxx','modelId':'xxx','pageSize':'xx','pageIndex':'xxx'}
+
+   返回：
+      totalCount {[数据文件 fileId,fileName,fileSize,uploadTime,status(validated),uploader(admin)]}
+      {'msg': 'success', 'code': 1, 'data': {'totalCount':'xxx','fileInfo':[{'fileId':'xx',' fileName':'xxx',
+      'fileSize':'xxx','uploadTime':'xxxx','status':'xx','uploader':'xxxx'}....]}}
+
+
+4 文件上传/uoload&run
+   websocket
+   输入： 模型id 文件名 是否run的标识
+   {'token':'xxx',‘modelId':'xxx','fileName':'xxxx','toBeRun':'xxx'}
+   返回： 上传成功，文件与模型匹配校验结果（压缩包的时候，需要返回不匹配的具体文件信息），是否已经验证过，标识为run时返回结果状态值（是否成功，结果值存储在数据库）（每个状态都返回对应值）
+          文件id
+          {'msg': 'success', 'code': 1, 'data': {'uploadStatus':'success'}
+          {'msg': 'success', 'code': 1, 'data': {'checkStatus':'success'}
+          {'msg': 'success', 'code': 1, 'data': {'checkStatus':'error','errorFile':{'fileName':'xxx'...}}
+          {'msg': 'success', 'code': 1, 'data': {'validateStatus':'validated'}
+          {'msg': 'success', 'code': 1, 'data': {'validateStatus':'notValidated'}
+          {'msg': 'success', 'code': 1, 'data': {'validateResult':'success'}
+
+4.1 文件删除 （逻辑删除）
+   输入：文件id
+   {'token':'xxx','fileId':'xxx'}
+
+      web服务器删除，云服务器保留，图像对该用户不可见
+   返回：
+   {'msg': 'success', 'code': 1, 'data': {'deleteStatus':'success'}
+
+5 run
+  websocket
+   输入 模型id 文件id
+    {'token':'xxx','fileId':'xxx','modelId':'xxx'}
+   返回： 查询是否验证过 （逻辑上不需要处理是否在web服务器端）拿到ai服务器的结果存储在服务器，返回给客户端一个状态值
+   {'msg': 'success', 'code': 1, 'data': {'validateStatus':'validated'}
+          {'msg': 'success', 'code': 1, 'data': {'validateStatus':'notValidated'}
+          {'msg': 'success', 'code': 1, 'data': {'validateResult':'success'}
+
+
+
+6 文件验证列表
+  输入 文件id 模型id
+
+   {'token':'xxx','fileId':'xxx','modelId':'xxx'}
+
+  返回值   模型版本id 模型版本name 验证耗时 验证时间 任务id
+  {'msg': 'success', 'code': 1, 'data': [{'modelVersionId':'xxx','modelVersionName':'xxx','validateTimeCost':'xxx','validateStartTime':'xx',;'validateTaskId':'xxx'},,,,,]}
+
+7 文件验证结果
+  输入 任务id pageSize pageIndex
+
+  {'token':'xxx','fileId':'xxx','pageSize':'xxx','pageIndex':'xx'}
+  返回值  验证结果
+  {'msg': 'success', 'code': 1, 'data': {'validateResult':{['validateData':'']......}}
+
+8 用户列表：
+  {'token':'xxxx'}
+  输入
+
+  返回： userid userName totalSpace 禁用状态 最后登录时间 创建时间
+
+  {'msg': 'success', 'code': 1, 'data': {'user':{['userId':'xx','userName':'xx','password':'xxx','freeSpace':'xx','totalSpace':'xx','inuse':'x','lastLogin':'xx','createTime':'xx']......}}
+
+9 创建/编辑启禁用用户（）
+  /api/admin/editUser
+  输入 userId（为“”时表示新增）
+
+  {’token‘:'xxx','userId':'xxx',’userName‘：’xx'，'password':'xxx','totalSpace':'xxx','inuse':'','roletype':'xxx'}
+  创建用户时，userid值为‘’，其他字段带值；编辑状态时，userid须有值，编辑的对象必须有值，一共只能两个有值，其他值为‘’
+
+  返回 更新后的该用户信息
+  同8，但是user字段只会有一个值
+  {'msg': 'success', 'code': 1, 'data': {'user':{['userId':'xx','userName':'xx','password':'xxx','freeSpace':'xx','totalSpace':'xx','inuse':'x','lastLogin':'xx','createTime':'xx']}}
+
+10 模型统计：
+   输入 模型id
+
+   {‘token’:'xxx','modelId':'xxxx'}
+   返回 模型版本id 模型版本Name 模型版本上传的文件 模型版本验证文件
+
+   {'msg': 'success', 'code': 1, 'data': {'modelReport':{['modelVersionId':'xxx','modelVersionName':'xxx','uploadFileCount':'xx','validatedFileCount':'xxx']......}}
+
+表：
+model_validate
+
+
+用户表user
+user_id user_name password last_login status role_type password_status total_space used_space token create_time update_time
+
+模型model
+model_id model_name newest_version_id newest_version_name  upload_file_count validated_file_count validate_error_file_count model_logo model_desc update_time
+
+模型详情表model_detail
+model_detail_id model_id model_name version_name update_time model_size upload_file_count validated_file_count validate_error_file_count
+
+上传的数据文件 upload_file
+upload_file_id upload_file_name model_version_id modified_name upload_file_md5 uploader upload_time upload_file_size status visable count(zip) last_validate_version_id
+web服务器和齐牛云服务器上的文件name都改为upload_file_id+name的后缀，写到upload_file_modified_name字段
+
+验证任务表validate_task
+validate_task_id model_version_id upload_file_id validate_start_time validate_time_cost
+
+验证结果表vilidate_detail
+validate_detail_id validate_task_id upload_file_id validate_data

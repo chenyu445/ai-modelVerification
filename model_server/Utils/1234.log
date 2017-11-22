@@ -1,0 +1,32 @@
+Tue, 12 Sep 2017 10:22:49 LogUtils.py[line:22] DEBUG debug message吞吞吐吐
+Tue, 12 Sep 2017 10:22:49 LogUtils.py[line:25] INFO info message
+Tue, 12 Sep 2017 10:22:49 LogUtils.py[line:28] WARNING warning message
+Tue, 12 Sep 2017 10:22:49 LogUtils.py[line:31] ERROR error message
+Tue, 12 Sep 2017 10:22:49 LogUtils.py[line:34] CRITICAL critical message
+Tue, 2017 09 12 10:23:34 LogUtils.py[line:22] DEBUG debug message吞吞吐吐
+Tue, 2017 09 12 10:23:34 LogUtils.py[line:25] INFO info message
+Tue, 2017 09 12 10:23:34 LogUtils.py[line:28] WARNING warning message
+Tue, 2017 09 12 10:23:34 LogUtils.py[line:31] ERROR error message
+Tue, 2017 09 12 10:23:34 LogUtils.py[line:34] CRITICAL critical message
+2017-09-12 10:24:06 LogUtils.py[line:22] DEBUG debug message吞吞吐吐
+2017-09-12 10:24:06 LogUtils.py[line:25] INFO info message
+2017-09-12 10:24:06 LogUtils.py[line:28] WARNING warning message
+2017-09-12 10:24:06 LogUtils.py[line:31] ERROR error message
+2017-09-12 10:24:06 LogUtils.py[line:34] CRITICAL critical message
+2017-09-12 17:26:17 [DEBUG] debug message吞吞吐吐
+2017-09-12 17:26:17 [INFO] info message
+2017-09-12 17:26:17 [WARNING] warning message
+2017-09-12 17:26:17 [ERROR] error message
+2017-09-12 17:26:17 [CRITICAL] critical message
+2017-09-12 17:26:29 [DEBUG] debug message吞吞吐吐
+2017-09-12 17:26:29 [INFO] info message
+2017-09-12 17:26:29 [WARNING] warning message
+2017-09-12 17:26:29 [ERROR] error message
+2017-09-12 17:26:29 [CRITICAL] critical message
+2017-09-12 17:26:29 [INFO] dadadada111
+2017-09-12 17:26:36 [DEBUG] debug message吞吞吐吐
+2017-09-12 17:26:36 [INFO] info message
+2017-09-12 17:26:36 [WARNING] warning message
+2017-09-12 17:26:36 [ERROR] error message
+2017-09-12 17:26:36 [CRITICAL] critical message
+2017-09-12 17:26:36 [INFO] dadadada111
